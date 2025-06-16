@@ -1,0 +1,53 @@
+name: Publish
+
+on:
+  push:
+    tags: [v*]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Install cargo-binstall
+        uses: cargo-bins/cargo-binstall@v1.10.15
+      - name: Install wkg
+        run: cargo binstall wkg
+      - name: Get version
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=semver,pattern={{version}}
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Setup Rust toolchain for wasm32-wasip2
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-wasip2
+      - name: Build
+        run: cargo build --release --target wasm32-wasip2
+      - name: Publish to Container Registry
+        id: publish
+        uses: bytecodealliance/wkg-github-action@v5
+        with:
+            oci-reference-without-tag: '${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}'
+            file: 'target/wasm32-wasip2/release/openai_client.wasm'
+            description: 'WASI HTTP client for OpenAI APIs'
+            source: 'https://github.com/promptrs/openai-client'
+            homepage: 'https://github.com/promptrs/openai-client'
+            version: ${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
+            licenses: 'MIT'

@@ -1,6 +1,6 @@
 [package]
 name = "openai-client"
-version = "0.1.1"
+version = "0.2.0"
 edition = "2024"
 
 [dependencies]
@@ -17,7 +17,7 @@ crate-type = ["cdylib"]
 [package.metadata.component.target]
 registry = "ghcr.io/promptrs"
 package = "promptrs:core"
-version = "0.1.1"
+version = "0.2.0"
 world = "client"
 
 [package.metadata.component.dependencies]

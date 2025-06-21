@@ -7,6 +7,6 @@ name = "promptrs:core"
 registry = "ghcr.io/promptrs"
 
 [[package.version]]
-requirement = "^0.1.1"
-version = "0.1.1"
-digest = "sha256:8af8c503bd7a6641cb54c2c2fc368500c3159f76c0b5563a402295c1d2706bad"
+requirement = "^0.2.0"
+version = "0.2.0"
+digest = "sha256:bf2748d54e6e1a2552382207852953c1cce9b0bf2e47c85dbed8c1557f55b960"

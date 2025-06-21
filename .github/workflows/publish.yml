@@ -19,8 +19,6 @@ jobs:
         uses: actions/checkout@v4
       - name: Install cargo-binstall
         uses: cargo-bins/cargo-binstall@v1.10.15
-      - name: Install wkg
-        run: cargo binstall wkg
       - name: Get version
         id: meta
         uses: docker/metadata-action@v5
